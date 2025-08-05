@@ -1,0 +1,5 @@
+src\main\java\com\studentmanagement\model\Student.class
+src\main\java\com\studentmanagement\service\StudentService.class
+src\main\java\com\studentmanagement\StudentManagementApplication.class
+src\main\java\com\studentmanagement\util\FileUtil.class
+src\main\java\com\studentmanagement\controller\StudentController.class

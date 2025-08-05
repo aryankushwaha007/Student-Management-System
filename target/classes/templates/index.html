@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-color: #333;
+            --bg-color: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            background: linear-gradient(125deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            /* Prevents body scrolling */
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+            filter: blur(10px);
+        }
+
+        .shape1 {
+            width: 250px;
+            height: 250px;
+            background: #f093fb;
+            top: -10%;
+            left: -8%;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            width: 200px;
+            height: 200px;
+            background: #43e97b;
+            top: 25%;
+            right: -5%;
+            animation-delay: 4s;
+        }
+
+        .shape3 {
+            width: 180px;
+            height: 180px;
+            background: #ffd200;
+            bottom: 0%;
+            left: 15%;
+            animation-delay: 8s;
+        }
+
+        .shape4 {
+            width: 150px;
+            height: 150px;
+            background: #ff9a9e;
+            bottom: -10%;
+            right: 8%;
+            animation-delay: 12s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-50px) scale(1.15) rotate(20deg);
+            }
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1400px;
+            height: 95vh;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInFromBottom 0.8s ease-out forwards;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        @keyframes fadeInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .btn-add-student {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 1.8rem;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-student:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            padding: 1rem;
+            border-radius: 15px;
+            color: #fff;
+        }
+
+        .icon-total {
+            background: linear-gradient(45deg, #2980b9, #6dd5fa);
+        }
+
+        .icon-grade {
+            background: linear-gradient(45deg, #1abc9c, #59e0c5);
+        }
+
+        .icon-new {
+            background: linear-gradient(45deg, #f39c12, #f1c40f);
+        }
+
+        .stat-info .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .table-container {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* Important for child scrolling */
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+        }
+
+        .table-wrapper {
+            overflow-y: auto;
+            /* This makes the table body scrollable */
+            flex-grow: 1;
+        }
+
+        .table-modern {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-modern th,
+        .table-modern td {
+            padding: 1rem;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .table-modern thead {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+            border-bottom: 2px solid var(--bg-color);
+        }
+
+        .table-modern th {
+            color: #888;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .table-modern tbody tr {
+            border-bottom: 1px solid var(--bg-color);
+            transition: background-color 0.2s ease;
+        }
+
+        .table-modern tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .table-modern tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .student-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .badge-grade {
+            padding: 0.4em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .grade-A,
+        .grade-A-plus {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .grade-B,
+        .grade-B-plus {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .grade-C,
+        .grade-C-plus {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 0.4rem 0.8rem;
+            margin-right: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .no-students {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+    <div class="floating-shape shape4"></div>
+
+    <div class="main-container">
+        <div class="glass-card">
+            <div class="dashboard-header">
+                <div>
+                    <h1 class="main-title">Student Dashboard</h1>
+                    <p class="text-muted">Welcome back! Here's your student overview.</p>
+                </div>
+                <a href="/add" class="btn btn-add-student"><i class="fas fa-user-plus me-2"></i> Add Student</a>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-total"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number" th:text="${students.size()}">0</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-grade"><i class="fas fa-award"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">B+</div>
+                        <div class="stat-label">Average Grade</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-new"><i class="fas fa-user-check"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">New This Month</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">All Students</h3>
+                    <form class="search-bar" th:action="@{/search}" method="get">
+                        <input type="number" name="roll" placeholder="Search by Roll..." required>
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="table-wrapper">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Roll No</th>
+                                <th>Grade</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="student : ${students}">
+                                <td>
+                                    <div class="student-name-cell">
+                                        <div class="avatar" th:text="${#strings.substring(student.name, 0, 1)}"></div>
+                                        <span th:text="${student.name}"></span>
+                                    </div>
+                                </td>
+                                <td th:text="${student.roll}"></td>
+                                <td>
+                                    <span class="badge-grade" th:text="${student.grade}"
+                                        th:classappend="${student.grade == 'A' || student.grade == 'A+' ? 'grade-A-plus' : 
+                                                          (student.grade == 'B' || student.grade == 'B+' ? 'grade-B-plus' : 'grade-C-plus')}">
+                                    </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/edit/{roll}(roll=${student.roll})}" class="btn btn-action">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/delete/{roll}(roll=${student.roll})}" class="btn btn-action"
+                                        onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${students.isEmpty()}">
+                                <td colspan="4" class="no-students">
+                                    <i class="fas fa-user-slash fs-1 mb-3"></i>
+                                    <p>No students found. Add one to get started!</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+
+</html>
