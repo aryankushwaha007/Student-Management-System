@@ -163,3 +163,9 @@ StudentManagementSystem/
 -   [ ] **User Authentication**: Add login/logout functionality with Spring Security.
 -   [ ] **Advanced Reporting**: Implement features to generate and export student reports.
 -   [ ] **RESTful API**: Develop a more comprehensive REST API for headless
+
+---
+
+## 📜 License
+
+This project is licensed under
